@@ -1,6 +1,6 @@
 vim9script
 
-var CtrlpBuiltins = ctrlp#getvar('g:ctrlp_builtins')
+var ctrlp_builtins = ctrlp#getvar('g:ctrlp_builtins')
 var ZennExtVar = {
   lname: 'Zenn Contents',
   sname: 'zenn',
@@ -11,9 +11,10 @@ ZennExtVar.init = 'ctrlp#zenn#Init()'
 ZennExtVar.accept = 'ctrlp#zenn#Accept'
 g:ctrlp_ext_vars = get(g:, 'ctrlp_ext_vars', []) -> add(ZennExtVar)
 
-var IndexId = CtrlpBuiltins + len(g:ctrlp_ext_vars)
+var IndexId = ctrlp_builtins + len(g:ctrlp_ext_vars)
 var root_dir = get(g:, 'ctrlp_zenn_root', '.')
-var zenn_title_map = {}
+var zenn_title_map: dict<string> = {}
+
 export def Id(): number
   return IndexId
 enddef
@@ -25,7 +26,7 @@ export def Init(): list<string>
   var target_dirs = ['articles', 'books']
 
   for target in target_dirs
-    var base_dir = printf('%s/%s', root_dir, target)->expand()
+    var base_dir = printf('%s/%s', root_dir, target)->fnamemodify(':p')
     if !isdirectory(base_dir)
       continue
     endif
