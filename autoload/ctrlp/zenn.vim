@@ -22,9 +22,12 @@ export def Id(): number
   return IndexId
 enddef
 
+# Definition of item structure for the candidate list
+type Item = dict<any>
+
 export def Init(): list<string>
   zenn_title_map = {}
-  var display_lines: list<string> = []
+  var items: list<Item> = []
 
   var target_dirs = ['articles', 'books']
 
@@ -60,8 +63,22 @@ export def Init(): list<string>
       endif
 
       zenn_title_map[label] = file
-      add(display_lines, label)
+
+      # Add item including modification time (getftime)
+      items->add({
+        label: label,
+        mtime: getftime(file),
+      })
     endfor
+  endfor
+
+  # Sort by modification time in descending order (newest file first)
+  items->sort((a, b) => b.mtime - a.mtime)
+
+  # Build and return a strictly typed list<string>
+  var display_lines: list<string> = []
+  for item in items
+    display_lines->add(item.label)
   endfor
 
   return display_lines
