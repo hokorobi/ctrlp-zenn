@@ -1,20 +1,23 @@
 vim9script
 
-var ctrlp_builtins = ctrlp#getvar('g:ctrlp_builtins')
-var ZennExtVar = {
+if exists('g:loaded_ctrlp_zenn')
+  finish
+endif
+g:loaded_ctrlp_zenn = 1
+
+g:ctrlp_ext_vars = get(g:, 'ctrlp_ext_vars', []) -> add({
+  init: 'ctrlp#zenn#Init()',
+  accept: 'ctrlp#zenn#Accept',
   lname: 'Zenn Contents',
   sname: 'zenn',
   type: 'path',
   sort: 0,
-}
-ZennExtVar.init = 'ctrlp#zenn#Init()'
-ZennExtVar.accept = 'ctrlp#zenn#Accept'
-g:ctrlp_ext_vars = get(g:, 'ctrlp_ext_vars', []) -> add(ZennExtVar)
+})
 
-var IndexId = ctrlp_builtins + len(g:ctrlp_ext_vars)
 var root_dir = get(g:, 'ctrlp_zenn_root', '.')
 var zenn_title_map: dict<string> = {}
 
+var IndexId = ctrlp#getvar('g:ctrlp_builtins') + len(g:ctrlp_ext_vars)
 export def Id(): number
   return IndexId
 enddef
