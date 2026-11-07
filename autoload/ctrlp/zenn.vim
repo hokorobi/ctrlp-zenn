@@ -1,9 +1,9 @@
 vim9script
 
-if exists('g:loaded_ctrlp_zenn')
+if exists('g:loaded_ctrlp_zenn_autoload')
   finish
 endif
-g:loaded_ctrlp_zenn = 1
+g:loaded_ctrlp_zenn_autoload = 1
 
 g:ctrlp_ext_vars = get(g:, 'ctrlp_ext_vars', []) -> add({
   init: 'ctrlp#zenn#Init()',
